@@ -8,15 +8,35 @@
     <div class="table">
         
         {% for post in posts %}
-            <h5 class='post head'>
-                By {{ post.author }} on {{ post.date ? post.date|date('d/m/y h:i:s') : '' }}
-            </h5>
+            <h4 class='post head'>
+                By {{ post.author }} on {{ post.date ? post.date|date('d/m/y \\a\\t H:i') : '' }}
+            </h4>
             <p class='post content'>
                 {{ post.content }}
             </p>
+            {% if post.comments %}
+                <h5 class='comment head'>
+                    Comments:
+                </h5>
+                {% for comment in post.comments %}
+                    <h6 class='comment head'>
+                        By {{ comment.author }} on {{ comment.date ? comment.date|date('d/m/y \\a\\t H:i') : '' }}
+                    </h6>
+                    <p class='comment content'>
+                        {{ comment.content }} 
+                        {% if app.user and comment.author == app.user.username %}
+                            <br>
+                            <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">edit comment</a>
+                        {% endif %}
+                    </p>
+                    
+                {% endfor %}
+            {% endif %}
             <div>
-                
-                <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+                <a href="{{ path('app_comment_new', {'post_id': post.id}) }}">comment</a>
+                {% if app.user and post.author == app.user.username %}
+                    <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit post</a>
+                {% endif %}
                 <br>
                 <br>
             </div>

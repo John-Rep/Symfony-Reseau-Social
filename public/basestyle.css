@@ -24,12 +24,22 @@ label {
     text-align: left;
 }
 
+.comment {
+    margin-left: 50px;
+    text-align: left;
+}
+
 .head {
     padding: 5px;
     background-color: gainsboro;
 }
 
 .post-entry {
+    width: 40vw;
+    height: 30vh;
+}
+
+.comment-entry {
     width: 40vw;
     height: 30vh;
 }

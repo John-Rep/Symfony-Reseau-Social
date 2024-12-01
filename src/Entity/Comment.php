@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
+use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PostRepository::class)]
-class Post
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
+class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,17 +17,17 @@ class Post
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $user_id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $user_id = null;
+    #[ORM\Column]
+    private ?int $post_id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $author = null;
 
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private ?array $comments = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int
     {
@@ -46,26 +46,26 @@ class Post
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getUserId(): ?string
+    public function getUserId(): ?int
     {
         return $this->user_id;
     }
 
-    public function setUserId(?string $user_id): static
+    public function setUserId(?int $user_id): static
     {
         $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getPostId(): ?int
+    {
+        return $this->post_id;
+    }
+
+    public function setPostId(int $post_id): static
+    {
+        $this->post_id = $post_id;
 
         return $this;
     }
@@ -82,14 +82,14 @@ class Post
         return $this;
     }
 
-    public function getComments(): ?array
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->comments;
+        return $this->date;
     }
 
-    public function setComments(?array $comments): static
+    public function setDate(\DateTimeInterface $date): static
     {
-        $this->comments = $comments;
+        $this->date = $date;
 
         return $this;
     }

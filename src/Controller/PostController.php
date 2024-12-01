@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +16,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/post')]
 final class PostController extends AbstractController{
     #[Route(name: 'app_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository, UserRepository $userRepository): Response
+    public function index(PostRepository $postRepository, UserRepository $userRepository, CommentRepository $commentRepository): Response
     {
         $posts = $postRepository->findAll();
         foreach ($posts as $post) {
-            $post->author = $userRepository->findOneById($post->getUserId())->getUsername();
+            $post->setAuthor($userRepository->findOneById($post->getUserId())->getUsername());
+            $comments = $commentRepository->findBy(['post_id' => $post->getId()]);
+            foreach ($comments as $comment) {
+                $comment->setAuthor($userRepository->findOneById($comment->getUserId())->getUsername());
+            }
+            $post->setComments($comments);
+            
         }
+        rsort($posts);
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
         ]);
@@ -54,14 +62,6 @@ final class PostController extends AbstractController{
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Post $post): Response
-    {
-        return $this->render('post/show.html.twig', [
-            'post' => $post,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
@@ -81,9 +81,13 @@ final class PostController extends AbstractController{
     }
 
     #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
-    public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Post $post, EntityManagerInterface $entityManager, CommentRepository $commentRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->getPayload()->getString('_token'))) {
+            $comments = $commentRepository->findBy(['post_id' => $post->getId()]);
+            foreach ($comments as $comment) {
+                $entityManager->remove($comment);
+            }
             $entityManager->remove($post);
             $entityManager->flush();
         }
