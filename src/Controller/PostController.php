@@ -23,7 +23,12 @@ final class PostController extends AbstractController{
             $post->setAuthor($userRepository->findOneById($post->getUserId())->getUsername());
             $comments = $commentRepository->findBy(['post_id' => $post->getId()]);
             foreach ($comments as $comment) {
-                $comment->setAuthor($userRepository->findOneById($comment->getUserId())->getUsername());
+                if ($comment->getUserId()) {
+                    $comment->setAuthor($userRepository->findOneById($comment->getUserId())->getUsername());
+                } else {
+                    $comment->setAuthor('Anonymous User');
+                }
+                
             }
             $post->setComments($comments);
             

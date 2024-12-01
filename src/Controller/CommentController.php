@@ -30,7 +30,9 @@ final class CommentController extends AbstractController{
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPostId($_GET['post_id']);
-            $comment->setUserId($this->getUser()->getId());
+            if ($this->getUser()) {
+                $comment->setUserId($this->getUser()->getId());
+            }
             $comment->setDate(date_create());
             $entityManager->persist($comment);
             $entityManager->flush();
