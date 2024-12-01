@@ -1,0 +1,42 @@
+
+
+body {
+    text-align: center;
+}
+
+label {
+    display: block;
+}
+
+.header {
+    padding: 20px;
+    background-color: antiquewhite;
+}
+
+.post {
+    text-align: left;
+}
+
+.head {
+    background-color: gainsboro;
+}
+
+.post-entry {
+    width: 40vw;
+    height: 30vh;
+}
+
+.content {
+    background-color: lightcyan;
+    padding: 50px;
+}
+
+.table {
+    padding: 50px;
+    margin: auto;
+}
+
+form {
+    padding: 50px;
+    margin: auto;
+}

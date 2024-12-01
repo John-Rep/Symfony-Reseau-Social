@@ -3,39 +3,32 @@
 {% block title %}Post index{% endblock %}
 
 {% block body %}
-    <h1>Post index</h1>
+    <h1>Main Dashboard</h1>
 
     <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>Date</th>
-                <th>User_id</th>
-                <th>actions</th>
-            </tr>
-        </thead>
         <tbody>
         {% for post in posts %}
-            <tr>
-                <td>{{ post.id }}</td>
+            <tr class='post head'>
+                <th>By {{ post.author }} on {{ post.date ? post.date|date('d-M-Y h:i:s') : '' }}</th>
+            </tr>
+            <tr class='post content'>
                 <td>{{ post.content }}</td>
-                <td>{{ post.date ? post.date|date('Y-m-d') : '' }}</td>
-                <td>{{ post.userId }}</td>
+            </tr>
+            <tr>
                 <td>
                     <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
                     <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+                    <br>
+                    <br>
                 </td>
             </tr>
+            
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">no posts found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_post_new') }}">Create new</a>
-    <a href="{{ path('app_login') }}">Login</a>
-    <a href="{{ path('app_register') }}">Create Account</a>
 {% endblock %}

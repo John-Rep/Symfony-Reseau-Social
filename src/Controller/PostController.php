@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,10 +15,14 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/post')]
 final class PostController extends AbstractController{
     #[Route(name: 'app_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository): Response
+    public function index(PostRepository $postRepository, UserRepository $userRepository): Response
     {
+        $posts = $postRepository->findAll();
+        foreach ($posts as $post) {
+            $post->author = $userRepository->findOneById($post->getUserId())->getUsername();
+        }
         return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
+            'posts' => $posts,
         ]);
     }
 
@@ -27,17 +32,25 @@ final class PostController extends AbstractController{
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
+        if ($this->getUser()) {
+            $user = $this->getUser()->getUsername();
+        } else {
+            $user = 'Anonymous User';
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $post->setDate(date_create());
+            $post->setUserId($this->getUser()->getId());
             $entityManager->persist($post);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('post/new.html.twig', [
             'post' => $post,
             'form' => $form,
+            'user' => $user,
         ]);
     }
 
