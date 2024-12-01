@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'headerless.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
@@ -18,5 +18,6 @@
 
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
-    
+    <p>Already have an account? Login <a href="{{ path('app_login') }}">Here</a>.</p>
+    <a href="{{ path('app_post_index') }}">Return Home</a>
 {% endblock %}

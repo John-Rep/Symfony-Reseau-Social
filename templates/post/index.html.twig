@@ -5,30 +5,25 @@
 {% block body %}
     <h1>Main Dashboard</h1>
 
-    <table class="table">
-        <tbody>
+    <div class="table">
+        
         {% for post in posts %}
-            <tr class='post head'>
-                <th>By {{ post.author }} on {{ post.date ? post.date|date('d-M-Y h:i:s') : '' }}</th>
-            </tr>
-            <tr class='post content'>
-                <td>{{ post.content }}</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="{{ path('app_post_show', {'id': post.id}) }}">show</a>
-                    <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
-                    <br>
-                    <br>
-                </td>
-            </tr>
+            <h5 class='post head'>
+                By {{ post.author }} on {{ post.date ? post.date|date('d/m/y h:i:s') : '' }}
+            </h5>
+            <p class='post content'>
+                {{ post.content }}
+            </p>
+            <div>
+                
+                <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
+                <br>
+                <br>
+            </div>
             
         {% else %}
-            <tr>
-                <td colspan="5">no posts found</td>
-            </tr>
+            <div>no posts found</div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
 {% endblock %}

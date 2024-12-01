@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'headerless.html.twig' %}
 
 {% block title %}Log in!{% endblock %}
 
@@ -33,4 +33,6 @@
             Sign in
         </button>
     </form>
+    <p>Don't have an account? Create one <a href="{{ path('app_register') }}">Here</a>.</p>
+    <a href="{{ path('app_post_index') }}">Return Home</a>
 {% endblock %}

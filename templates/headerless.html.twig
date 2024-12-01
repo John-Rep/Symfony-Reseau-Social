@@ -13,17 +13,6 @@
         {% endblock %}
     </head>
     <body>
-        {% if app.user %}
-            <div class="header logged">
-                You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a><br>
-                <a href="{{ path('app_post_new')}}">Create New Post</a>
-            </div>
-        {% else %}
-            <div class="header unlogged">
-                You are currently not logged in, either <a href="{{ path('app_login') }}">Login</a>
-                or <a href="{{ path('app_register') }}">Create an Account</a>
-            </div>
-        {% endif %}
         {% block body %}{% endblock %}
     </body>
 </html>
